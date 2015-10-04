@@ -2,21 +2,66 @@
 title: "Gapminder Analyses Demo"
 author: "Nick Kappler"
 date: "10/4/2015"
-output: html_document
+output: pdf_document
 ---
+#'Capstone' project
+##Scatterplots
 
-This is an R Markdown document. Markdown is a simple formatting syntax for authoring HTML, PDF, and MS Word documents. For more details on using R Markdown see <http://rmarkdown.rstudio.com>.
+```{r echo=FALSE}
+library(dplyr)
+gap.in <- read.table("output/combined_gapMinder.tsv",
+                     sep="\t",
+                     header = TRUE)
 
-When you click the **Knit** button a document will be generated that includes both content as well as the output of any embedded R code chunks within the document. You can embed an R code chunk like this:
+gap.scand <- filter(gap.in, country == 'Finland'|country=='Sweden'|country=='Norway'|country=='Denmark')
 
-```{r}
-summary(cars)
+gap.fin <- filter(gap.scand,country=='Finland')
+gap.swe <- filter(gap.scand,country=='Sweden')
+gap.nor <- filter(gap.scand,country=='Norway')
+gap.den <- filter(gap.scand,country=='Denmark')
+
+#Function to draw the scatter plot of an arbitrary country from gap.in
+sc.plot <- function(data,state,xfactor,yfactor){
+  data.country = filter(data,country==state)
+  plot(x=data.country[,xfactor],y=data.country[,yfactor],
+       main = c('pcGDP Time Series for ',state),
+       xlab = 'year',
+       ylab = 'pcGDP'
+       )
+}
 ```
+Below are the per-capita gdp for Scandinavian countries.
+```{r  echo=FALSE}
+sc.plot(gap.in,'Finland','year','gdpPercap')
+```
+THis is the scatter plot for Finland.  Generally increasing, except for 1988-1990.
+```{r  echo=FALSE}
+sc.plot(gap.in,'Sweden','year','gdpPercap')
+```
+This is the scatter plot for Sweden.  Again, we have a positive trend.  The dip from 1988-1990 is less extreme than for Finland.
+```{r necho=FALSE}
+sc.plot(gap.in,'Norway','year','gdpPercap')
+```
+This ist he scatter plot for Norway.  Generally increasing, and the scale is quite a ib thigher than for the other scandinavian countries.
+```{r  echo=FALSE}
+sc.plot(gap.in,'Denmark','year','gdpPercap')
+```
+Scatter plot for Denmark. Again, note the slowdown 1988-1990 and the lower time scale than Norway.
+```{r data}
+gap.in <- read.table("output/combined_gapMinder.tsv",sep = 
+                       "\t",
+                     header = TRUE)
 
-You can also embed plots, for example:
+library(dplyr)
+gap.in %>% 
+  select(year,pop,country,continent) %>%
+  filter(year == 2002)%>%
+  group_by(continent) %>%
+  summarise(mean=mean(pop))
 
-```{r, echo=FALSE}
-plot(cars)
+gap.in %>%
+  select(continent,country) %>%
+  filter(continent  == 'Oceania')
 ```
 
 Note that the `echo = FALSE` parameter was added to the code chunk to prevent printing of the R code that generated the plot.
