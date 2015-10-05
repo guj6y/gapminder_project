@@ -61,4 +61,8 @@ gap.in %>%
 
 The mins are all very low; Oceania has a high min, but there are only two countries in the data set.  Asia has the highest maximum value, but the second lowest mean value; one of the mins is extremely low.  Oceania has teh highest average, though isn't the best category because it is only two countries.  The next highest is europe which makes sense since it is so developed.
 
-##
+##Histograms
+
+hist(select(gap.in,lifeExp)[,1])
+hist(select(gap.in,lifeExp)[,1],breaks=15)  
+hist(select(gap.in,lifeExp)[,1],breaks=5)  
